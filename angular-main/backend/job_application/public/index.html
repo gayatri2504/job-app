@@ -1,0 +1,98 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>Job Application</title>
+  <link rel="stylesheet" href="styles.css">
+</head>
+<body>
+  <form id="jobForm">
+    <h2>Job Application Form</h2>
+
+    <label>Full Name</label>
+    <input type="text" name="fullName" required />
+    <label>Company Name</label>
+    <input type="text" name="companyName" required />
+
+    <label>Email</label>
+    <input type="email" name="email" required />
+
+    <label>Mobile Number</label>
+    <input type="tel" name="mobile" required />
+
+    <label>Date of Birth</label>
+    <input type="date" name="dob" required />
+
+    <label>City</label>
+    <input type="text" name="city" />
+
+    <label>State</label>
+    <input type="text" name="state" />
+
+    <label>Country</label>
+    <input type="text" name="country" />
+
+    <label>Pincode</label>
+    <input type="text" name="pincode" />
+
+    <label>Resume (Paste text or link)</label>
+    <textarea name="resume" rows="4" required></textarea>
+
+    <button type="submit">Apply</button>
+
+    <p id="responseMessage" class="hidden"></p>
+  </form>
+
+  <script>
+    const form = document.getElementById('jobForm');
+    const responseMessage = document.getElementById('responseMessage');
+    const applicationsList = document.getElementById('applicationsList');
+  
+    async function loadApplications() {
+      const res = await fetch('/api/applications');
+      const data = await res.json();
+  
+      applicationsList.innerHTML = data.map(app => `
+        <div style="border: 1px solid #ccc; padding: 1rem; margin-bottom: 1rem; border-radius: 0.5rem;">
+          <strong>${app.fullName}</strong> (${app.email})<br>
+          <em>DOB:</em> ${app.dob}<br>
+          <em>Mobile:</em> ${app.mobile}<br>
+          <em>Location:</em> ${app.city}, ${app.state}, ${app.country} - ${app.pincode}<br>
+          <em>Resume:</em><br><pre style="white-space: pre-wrap;">${app.resume}</pre>
+          <small>Submitted at: ${new Date(app.submittedAt).toLocaleString()}</small>
+        </div>
+      `).join('');
+    }
+  
+    form.addEventListener('submit', async (e) => {
+      e.preventDefault();
+      const formData = new FormData(form);
+      const data = Object.fromEntries(formData.entries());
+  
+      const res = await fetch('/api/apply', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify(data),
+      });
+  
+      if (res.ok) {
+        responseMessage.textContent = 'Application submitted successfully!';
+        responseMessage.classList.remove('hidden');
+        responseMessage.style.color = 'green';
+        form.reset();
+        await loadApplications(); // Refresh the list
+      } else {
+        responseMessage.textContent = 'Failed to submit. Please try again.';
+        responseMessage.classList.remove('hidden');
+        responseMessage.style.color = 'red';
+      }
+    });
+  
+    // Load existing apps on page load
+    window.onload = loadApplications;
+  </script>
+   
+</body>
+</html> 
+ 
