@@ -1,7 +1,7 @@
---> This Job Application Portal is a full-stack web project developed to simulate a real-world job application process.
---> It enables users to search for companies and apply to jobs via an interactive form.
---> The application is built using Angular for the frontend, ASP.NET Core for the backend API, and SQLite as the database.
---> It showcases modern web development practices including API integration, form validation, and database handling.
+This Job Application Portal is a full-stack web project developed to simulate a real-world job application process.
+It enables users to search for companies and apply to jobs via an interactive form.
+The application is built using Angular for the frontend, ASP.NET Core for the backend API, and SQLite as the database.
+It showcases modern web development practices including API integration, form validation, and database handling.
 
 Tech Stack 
 Frontend
